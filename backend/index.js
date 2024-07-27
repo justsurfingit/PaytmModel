@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://moneytransferhub.netlify.app",
+    origin: "https://moneytransferhub.netlify.app/",
     credentials: true,
   })
 );
