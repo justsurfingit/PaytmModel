@@ -10,7 +10,7 @@ const AllUser = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/users/all"
+          "https://paytmmodeltest.onrender.com/api/v1/users/all"
         );
         setUsers(response.data);
 

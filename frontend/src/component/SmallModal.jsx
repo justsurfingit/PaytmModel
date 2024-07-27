@@ -13,7 +13,7 @@ const SmallModal = ({ isOpen, onClose, user }) => {
     try {
       e.preventDefault();
       const val = await axios.post(
-        "http://localhost:3000/api/v1/users/transfer",
+        "https://paytmmodeltest.onrender.com/api/v1/users/transfer",
         {
           toUser: user.id,
           fromUser: userOrigin.id,
@@ -22,7 +22,7 @@ const SmallModal = ({ isOpen, onClose, user }) => {
       );
       if (val.data.success) {
         const bal = await axios.post(
-          "http://localhost:3000/api/v1/users/balance",
+          "https://paytmmodeltest.onrender.com/api/v1/users/balance",
           {
             user: userOrigin.id,
           }

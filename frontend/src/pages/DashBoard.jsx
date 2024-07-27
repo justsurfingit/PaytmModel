@@ -19,7 +19,7 @@ const DashBoard = () => {
   async function getLatestBalance() {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/users/balance",
+        "https://paytmmodeltest.onrender.com/api/v1/users/balance",
         {
           user: udata.id,
         }

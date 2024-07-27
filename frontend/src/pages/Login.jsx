@@ -15,10 +15,13 @@ const Login = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/users/login", {
-        userName: email,
-        password: password,
-      });
+      const res = await axios.post(
+        "https://paytmmodeltest.onrender.com/api/v1/users/login",
+        {
+          userName: email,
+          password: password,
+        }
+      );
 
       if (res.data.success) {
         // Set cookies for authentication status and user info

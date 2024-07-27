@@ -11,12 +11,15 @@ const Signin = () => {
   const [nav, setNav] = useState(null);
   async function handleSignIn(e) {
     e.preventDefault();
-    const val = await axios.post("http://localhost:3000/api/v1/users/signup", {
-      userName: email,
-      firstName: firstname,
-      lastName: lastname,
-      password: Password,
-    });
+    const val = await axios.post(
+      "https://paytmmodeltest.onrender.com/api/v1/users/signup",
+      {
+        userName: email,
+        firstName: firstname,
+        lastName: lastname,
+        password: Password,
+      }
+    );
     console.log(val.data);
     if (val.data.msg != "success") {
       seterr(true);
