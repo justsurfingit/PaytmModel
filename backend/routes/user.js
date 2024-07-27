@@ -52,7 +52,6 @@ userRouter.post("/signup", async (req, res) => {
     await bal.save();
     res.send({ msg: "success", user: neo, balance: val });
   } catch (e) {
-    console.log(e);
     res.send(e);
   }
 });
@@ -79,7 +78,7 @@ userRouter.post("/login", async (req, res) => {
 
     if (comp) {
       const bd = await bankDetails.findOne({ userId: findu.id });
-      console.log(bd.balance);
+
       res.send({
         success: true,
         userinfo: {
@@ -94,20 +93,22 @@ userRouter.post("/login", async (req, res) => {
         success: false,
       });
   } catch (e) {
-    console.log(e);
+    res.send({
+      success: false,
+    });
   }
 });
 userRouter.put("/update", async (req, res) => {
   // first check whether current user is in database or not
   const { firstName, lastName, userName, password } = req.body;
   const u = await User.findOne({ userName: userName });
-  console.log(u);
+
   if (!u) {
     res.send({ msg: "invalid credentials1" });
     return;
   }
   const check = await bcrypt.compare(password, u.password);
-  console.log(check);
+
   if (!check) {
     res.send({ msg: "invalid credentials" });
     return;
@@ -165,7 +166,7 @@ userRouter.post("/transfer", async (req, res) => {
   }
 
   const bal = await bankDetails.findOne({ userId: fromUser }).session(session);
-  console.log(bal.balance, amount);
+
   if (bal.balance < amount) {
     await session.abortTransaction();
     return res.status(400).json({

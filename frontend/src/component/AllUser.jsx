@@ -13,7 +13,7 @@ const AllUser = () => {
           "http://localhost:3000/api/v1/users/all"
         );
         setUsers(response.data);
-        console.log(response.data);
+
       } catch (error) {
         console.error("Error fetching users:", error);
       }

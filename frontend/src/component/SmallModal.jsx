@@ -6,48 +6,52 @@ import { useState } from "react";
 const SmallModal = ({ isOpen, onClose, user }) => {
   const [userOrigin, setUserOrigin] = useRecoilState(userInfo);
   const [Amount, setAmount] = useState("");
+  const [success, setSuccess] = useState({});
+  const [showdiv, setShowdiv] = useState(false);
+
   async function handleTransfer(e) {
-    // console.log("woow");
-    e.preventDefault();
-    const val = await axios.post(
-      "http://localhost:3000/api/v1/users/transfer",
-      {
-        toUser: user.id,
-        fromUser: userOrigin.id,
-        amount: parseInt(Amount),
-      }
-      // also update the user value
-    );
-    console.log(val);
-    if (val.data.success) {
-      const bal = await axios.post(
-        "http://localhost:3000/api/v1/users/balance",
+    try {
+      e.preventDefault();
+      const val = await axios.post(
+        "http://localhost:3000/api/v1/users/transfer",
         {
-          user: userOrigin.id,
+          toUser: user.id,
+          fromUser: userOrigin.id,
+          amount: parseInt(Amount),
         }
       );
-      //want to fetch the real time balance
-      setUserOrigin((prevUserInfo) => ({
-        ...prevUserInfo,
-        balance: bal.data.balance,
-      }));
+      if (val.data.success) {
+        const bal = await axios.post(
+          "http://localhost:3000/api/v1/users/balance",
+          {
+            user: userOrigin.id,
+          }
+        );
+        setUserOrigin((prevUserInfo) => ({
+          ...prevUserInfo,
+          balance: bal.data.balance,
+        }));
+        setShowdiv(true);
+        setSuccess({ message: "Transaction successful!" });
+      }
+    } catch (e) {
+      setShowdiv(true);
+      setSuccess({ message: "Transaction Failed. Try again." });
     }
   }
 
-  console.log(userOrigin);
   if (!isOpen) return null;
-  // console.log(userInfo);
 
   return (
     <div
       id="small-modal"
       tabIndex="-1"
-      className="fixed inset-0 z-50 flex items-center justify-center w-full p-4 overflow-x-hidden overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center w-full p-15 overflow-x-auto overflow-y-auto"
     >
       <div className="relative w-full max-w-md max-h-full mx-auto">
-        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 p-5">
           {/* Modal header */}
-          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+          <div className="flex items-center justify-between mb-3 border-b rounded-t dark:border-gray-600">
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">
               Send Money to, {user.firstName}
             </h3>
@@ -75,7 +79,7 @@ const SmallModal = ({ isOpen, onClose, user }) => {
             </button>
           </div>
           {/* Modal body */}
-          <div className="p-4 md:p-5 space-y-4">
+          <div className="space-y-4">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
               Please enter the amount you want to send and the recipient's
               details.
@@ -94,13 +98,13 @@ const SmallModal = ({ isOpen, onClose, user }) => {
                 onChange={(e) => {
                   setAmount(e.target.value);
                 }}
-                className=" p-2 mt-5 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="p-2 mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 placeholder="Enter amount"
               />
             </div>
           </div>
           {/* Modal footer */}
-          <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+          <div className="flex items-center p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
             <button
               onClick={handleTransfer}
               type="button"
@@ -116,9 +120,15 @@ const SmallModal = ({ isOpen, onClose, user }) => {
               Cancel
             </button>
           </div>
+          {showdiv && (
+            <div className="text-white bg-blue-600 p-3 mt-4 rounded-lg text-center">
+              {success.message}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default SmallModal;
