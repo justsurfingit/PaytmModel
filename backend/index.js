@@ -5,7 +5,13 @@ const cors = require("cors");
 const { userRouter } = require("./routes/user");
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "https://moneytransferhub.netlify.app" }));
+app.use(
+  cors({
+    origin: "https://moneytransferhub.netlify.app",
+    credentials: true,
+  })
+);
+
 app.use("/api/v1/users", userRouter);
 
 app.listen(3000, () => {
