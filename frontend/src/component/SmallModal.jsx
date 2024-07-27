@@ -1,4 +1,4 @@
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfo } from "../Store/userInfo";
 import axios from "axios";
 import { useState } from "react";
@@ -46,82 +46,78 @@ const SmallModal = ({ isOpen, onClose, user }) => {
     <div
       id="small-modal"
       tabIndex="-1"
-      className="fixed inset-0 z-50 flex items-center justify-center w-full p-15 overflow-x-auto overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center w-full p-4 bg-black bg-opacity-75"
     >
-      <div className="relative w-full max-w-md max-h-full mx-auto">
-        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700 p-5">
+      <div className="relative w-full max-w-md mx-auto">
+        <div className="relative bg-black text-white rounded-lg shadow-lg p-5">
           {/* Modal header */}
-          <div className="flex items-center justify-between mb-3 border-b rounded-t dark:border-gray-600">
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              Send Money to, {user.firstName}
+          <div className="flex items-center justify-between mb-4 border-b border-gray-600 pb-2">
+            <h3 className="text-lg font-medium">
+              Send Money to {user.firstName}
             </h3>
             <button
               type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="text-gray-400 bg-transparent hover:bg-gray-700 hover:text-white rounded-lg text-sm w-8 h-8 p-1.5 inline-flex items-center justify-center"
               onClick={onClose}
             >
               <svg
-                className="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
                 fill="none"
-                viewBox="0 0 14 14"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  stroke="currentColor"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
               </svg>
-              <span className="sr-only">Close modal</span>
             </button>
           </div>
           {/* Modal body */}
           <div className="space-y-4">
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              Please enter the amount you want to send and the recipient's
-              details.
+            <p className="text-base leading-relaxed">
+              Please enter the amount you want to send.
             </p>
             <div>
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
+              <label htmlFor="amount" className="block text-sm font-medium">
                 Amount
               </label>
               <input
                 id="amount"
                 type="number"
                 value={Amount}
-                onChange={(e) => {
-                  setAmount(e.target.value);
-                }}
-                className="p-2 mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm dark:bg-gray-800 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                onChange={(e) => setAmount(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-800 text-white"
                 placeholder="Enter amount"
               />
             </div>
           </div>
           {/* Modal footer */}
-          <div className="flex items-center p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
+          <div className="mt-4 flex items-center justify-end space-x-4">
             <button
               onClick={handleTransfer}
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Confirm
             </button>
             <button
               onClick={onClose}
-              type="button"
-              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              className="px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
               Cancel
             </button>
           </div>
           {showdiv && (
-            <div className="text-white bg-blue-600 p-3 mt-4 rounded-lg text-center">
+            <div
+              className={`mt-4 text-center p-3 rounded-lg ${
+                success.message === "Transaction successful!"
+                  ? "bg-green-500"
+                  : "bg-red-500"
+              }`}
+            >
               {success.message}
             </div>
           )}
