@@ -34,7 +34,11 @@ const ShowUserData = ({ user }) => {
       >
         Send Money
       </button>
-      <SmallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SmallModal
+        isOpen={isModalOpen}
+        user={user}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

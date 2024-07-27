@@ -8,7 +8,7 @@ const Protected = ({ Component }) => {
   const navigate = useNavigate();
   const setUserDetails = useSetRecoilState(userInfo);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const authStatus = Cookies.get("authStatus");
     const user = Cookies.get("userInfo");

@@ -5,6 +5,7 @@ const User = require("../model/User");
 const zod = require("zod");
 const bcrypt = require("bcrypt");
 const bankDetails = require("../model/Bank");
+const { default: mongoose } = require("mongoose");
 
 const userSignUp = zod.object({
   userName: zod.string().email(),
@@ -143,6 +144,59 @@ userRouter.get("/all", async (req, res) => {
     // console.log(list[i].userName);
   }
   res.send(neo);
+});
+
+userRouter.post("/transfer", async (req, res) => {
+  const session = await mongoose.startSession();
+
+  session.startTransaction();
+  const { amount, fromUser, toUser } = req.body;
+
+  // Fetch the accounts within the transaction
+  const sender = await User.findById(fromUser).session(session);
+  const reciever = await User.findById(toUser).session(session);
+
+  if (!sender || !reciever) {
+    await session.abortTransaction();
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Account",
+    });
+  }
+
+  const bal = await bankDetails.findOne({ userId: fromUser }).session(session);
+  console.log(bal.balance, amount);
+  if (bal.balance < amount) {
+    await session.abortTransaction();
+    return res.status(400).json({
+      success: false,
+      message: "Insufficient balance",
+    });
+  }
+
+  await bankDetails
+    .updateOne({ userId: fromUser }, { $inc: { balance: -amount } })
+    .session(session);
+  await bankDetails
+    .updateOne({ userId: toUser }, { $inc: { balance: amount } })
+    .session(session);
+
+  // Commit the transaction
+  await session.commitTransaction();
+  res.json({
+    success: true,
+    message: "Transfer successful",
+  });
+});
+userRouter.post("/balance", async (req, res) => {
+  const { user } = req.body;
+  const balance = await bankDetails.findOne({
+    userId: user,
+  });
+  // console.log(balance);
+  res.send({
+    balance: balance.balance,
+  });
 });
 module.exports = {
   userRouter,
