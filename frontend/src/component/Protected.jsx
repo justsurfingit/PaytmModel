@@ -8,7 +8,7 @@ const Protected = ({ Component }) => {
   const navigate = useNavigate();
   const setUserDetails = useSetRecoilState(userInfo);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     const authStatus = Cookies.get("authStatus");
     const user = Cookies.get("userInfo");
@@ -16,7 +16,7 @@ const Protected = ({ Component }) => {
     if (!authStatus || !user) {
       navigate("/"); // Redirect if not authenticated
     } else {
-      setUserDetails(JSON.parse(user)); // Set user info in Recoil state
+      setUserDetails((u) => JSON.parse(user)); // Set user info in Recoil state
     }
 
     setLoading(false); // Set loading to false after processing

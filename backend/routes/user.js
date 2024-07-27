@@ -191,12 +191,16 @@ userRouter.post("/transfer", async (req, res) => {
 });
 userRouter.post("/balance", async (req, res) => {
   const { user } = req.body;
+  const uInfo = await User.findById(user);
   const balance = await bankDetails.findOne({
     userId: user,
   });
   // console.log(balance);
   res.send({
+    firstName: uInfo.firstName,
     balance: balance.balance,
+    lastName: uInfo.lastName,
+    id: user,
   });
 });
 module.exports = {
