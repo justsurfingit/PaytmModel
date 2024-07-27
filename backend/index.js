@@ -4,19 +4,27 @@ const init = require("./db");
 const { userRouter } = require("./routes/user");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
+// Middleware for parsing JSON bodies
 app.use(express.json());
+
+// CORS configuration
 app.use(
   cors({
-    origin: "https://moneytransferhub.netlify.app/",
-    credentials: true,
+    origin: "https://moneytransferhub.netlify.app", // Your frontend URL
+    credentials: true, // If you need to include cookies or credentials
   })
 );
-app.options("*", cors()); // preflight options for all routes
 
+// Handle preflight requests for all routes
+app.options("*", cors());
+
+// Routes
 app.use("/api/v1/users", userRouter);
 
-app.listen(3000, () => {
+// Initialize the database and start the server
+app.listen(PORT, () => {
   init();
-  console.log("Server running on port 3000");
+  console.log(`Server running on port ${PORT}`);
 });
