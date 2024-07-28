@@ -12,7 +12,7 @@ app.use(express.json());
 // CORS configuration
 app.use(
   cors({
-    origin: "https://money-tranferhub-frontend.netlify.app", // Your frontend URL
+    origin: "*", // Your frontend URL
     credentials: true, // If you need to include cookies or credentials
   })
 );
